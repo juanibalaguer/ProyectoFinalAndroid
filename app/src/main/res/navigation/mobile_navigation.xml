@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/fragment_perfil">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.terrasolecabaas.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/fragment_pedidos"
+        android:name="com.example.terrasolecabaas.ui.pedidos.PedidosFragment"
+        android:label="@string/Pedidos"
+        tools:layout="@layout/fragment_pedidos" />
+
+    <fragment
+        android:id="@+id/fragment_productosyservicios"
+        android:name="com.example.terrasolecabaas.ui.productosyservicios.ProductosYServiciosFragment"
+        android:label="@string/ProductosYServicios"
+        tools:layout="@layout/fragment_productosyservicios" />
+    <fragment
+        android:id="@+id/fragment_logout"
+        android:name="com.example.terrasolecabaas.ui.logout.LogoutFragment"
+        android:label="@string/Logout"
+        tools:layout="@layout/fragment_logout" />
+    <fragment
+        android:id="@+id/fragment_perfil"
+        android:name="com.example.terrasolecabaas.ui.perfil.PerfilFragment"
+        android:label="@string/Perfil"
+        tools:layout="@layout/fragment_perfil" />
+    <fragment
+        android:id="@+id/fragment_pedido"
+        android:name="com.example.terrasolecabaas.ui.pedido.PedidoFragment"
+        android:label="fragment_pedido"
+        tools:layout="@layout/fragment_pedido" />
+</navigation>
