@@ -1,13 +1,16 @@
 package com.example.terrasolecabaas.ui.productosyservicios;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,37 +28,34 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHolder> {
+public class ServicioAdapter extends  RecyclerView.Adapter<ServicioAdapter.ViewHolder>{
     private Context context;
-    private ArrayList<Producto_Servicio> productos;
+    private ArrayList<Producto_Servicio> servicios;
     private LayoutInflater inflater;
     private ProductosYServiciosViewModel productosYServiciosViewModel;
-
-    public ProductoAdapter(Context context, ArrayList<Producto_Servicio> productos, LayoutInflater inflater, ProductosYServiciosViewModel productosYServiciosViewModel) {
+    public ServicioAdapter(Context context, ArrayList<Producto_Servicio> servicios, LayoutInflater inflater, ProductosYServiciosViewModel productosYServiciosViewModel) {
         this.context = context;
-        this.productos = productos;
+        this.servicios = servicios;
         this.inflater = inflater;
         this.productosYServiciosViewModel = productosYServiciosViewModel;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.fragment_item_producto, parent, false);
-        return new ViewHolder(view);
+    public ServicioAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.fragment_item_servicio, parent, false);
+        return new ServicioAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvNombreProductoItem.setText(productos.get(position).getNombre());
-        holder.tvPrecio.setText("$" + String.format("%.2f", productos.get(position).getPrecio()));
-        holder.tvCantidad.setText(0 + "");
-
+    public void onBindViewHolder(@NonNull ServicioAdapter.ViewHolder holder, int position) {
+        holder.tvNombreProductoItem.setText(servicios.get(position).getNombre());
         Glide.with(holder.itemView)
                 .asBitmap()
-                .load(LoginActivity.RUTA + "Uploads/" + productos.get(position).getFoto() + ".jpg")
+                .load(LoginActivity.RUTA + "Uploads/" + servicios.get(position).getFoto() + ".jpg")
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap foto, @Nullable Transition<? super Bitmap> transition) {
@@ -75,49 +75,26 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return productos.size();
+        return servicios.size();
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         protected ImageView ivFotoProducto;
-        protected TextView tvNombreProductoItem, tvPrecio;
-        protected TextView tvCantidad;
-        protected ImageButton btSumar, btRestar;
+        protected TextView tvNombreProductoItem;
         protected Button btAgregar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivFotoProducto = itemView.findViewById(R.id.ivFotoProducto);
             tvNombreProductoItem = itemView.findViewById(R.id.tvNombreProductoItem);
-            tvPrecio = itemView.findViewById(R.id.tvPrecio);
-            tvCantidad = itemView.findViewById(R.id.etDescripcion);
-            btSumar = itemView.findViewById(R.id.btSumar);
-            btRestar = itemView.findViewById(R.id.btRestar);
             btAgregar = itemView.findViewById(R.id.btAgregar);
-            btRestar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int cantidad = Integer.valueOf(tvCantidad.getText().toString());
-                    if (cantidad > 0) {
-                        cantidad --;
-                    }
-                    tvCantidad.setText(cantidad + "");
-                }
-            });
-            btSumar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int cantidad = Integer.valueOf(tvCantidad.getText().toString());
-                    cantidad ++;
-                    tvCantidad.setText(cantidad + "");
-                }
-            });
             btAgregar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    productosYServiciosViewModel.agregarProducto(productos.get(getAdapterPosition()),
-                            Integer.valueOf(tvCantidad.getText().toString()));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("servicio", servicios.get(getAdapterPosition()));
+                    Navigation.findNavController((Activity) context, R.id.nav_host_fragment).navigate(R.id.fragment_pedido, bundle);
                 }
             });
         }

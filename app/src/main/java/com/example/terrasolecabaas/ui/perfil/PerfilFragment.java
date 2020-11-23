@@ -1,9 +1,12 @@
 package com.example.terrasolecabaas.ui.perfil;
 
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,18 +21,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.terrasolecabaas.R;
+import com.example.terrasolecabaas.modelo.Inquilino;
 import com.example.terrasolecabaas.modelo.Usuario;
 
 public class PerfilFragment extends Fragment {
-
+    private SharedPreferences sharedPreferences;
     private PerfilViewModel perfilViewModel;
-    EditText etNombre, etApellido, etEmail;
-    TextView tvId, tvRol;
-    Button btEditar, btGuardar;
+    private EditText etNombre, etApellido, etEmail, etTelefono, etDni;
+    private TextView tvId, tvRol;
+    private Button btEditar, btGuardar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_perfil, container, false);
+        sharedPreferences = getContext().getSharedPreferences("cabaña", Context.MODE_PRIVATE);
         inicializar(root);
         return root;
     }
@@ -38,20 +43,23 @@ public class PerfilFragment extends Fragment {
         etNombre = view.findViewById(R.id.etNombre);
         etApellido = view.findViewById(R.id.etApellido);
         etEmail = view.findViewById(R.id.etEmail);
+        etTelefono = view.findViewById(R.id.etTelefono);
+        etDni = view.findViewById(R.id.etDni);
         btEditar = view.findViewById(R.id.btEditar);
         btGuardar = view.findViewById(R.id.btGuardar);
         tvId = view.findViewById(R.id.tvId);
         tvRol = view.findViewById(R.id.tvRol);
         perfilViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()).create(PerfilViewModel.class);
-        perfilViewModel.getUsuario().observe(getViewLifecycleOwner(), new Observer<Usuario>() {
+        perfilViewModel.getInquilino().observe(getViewLifecycleOwner(), new Observer<Inquilino>() {
             @Override
-            public void onChanged(Usuario usuario) {
-                tvId.setText(usuario.getId() + "");
-                etNombre.setText(usuario.getNombre());
-                etApellido.setText(usuario.getApellido());
-                etEmail.setText(usuario.getEmail());
-                String rol = usuario.getRol() == 2 ? "Empleado" : "Inquilino";
-                tvRol.setText(tvRol.getText().toString() +  rol);
+            public void onChanged(Inquilino inquilino) {
+                tvId.setText(inquilino.getId() + "");
+                etNombre.setText(inquilino.getNombre());
+                etApellido.setText(inquilino.getApellido());
+                etEmail.setText(inquilino.getEmail());
+                etTelefono.setText(inquilino.getTelefono());
+                etDni.setText(inquilino.getDni());
+                tvRol.setText(tvRol.getText().toString() + sharedPreferences.getString("rol", "-"));
             }
         });
         perfilViewModel.cargarUsuario(getActivity().getIntent().getBooleanExtra("login", false));
@@ -61,6 +69,7 @@ public class PerfilFragment extends Fragment {
             public void onClick(View view) {
                 etNombre.setEnabled(true);
                 etApellido.setEnabled(true);
+                etTelefono.setEnabled(true);
                 btEditar.setVisibility(View.GONE);
                 btGuardar.setVisibility(View.VISIBLE);
             }

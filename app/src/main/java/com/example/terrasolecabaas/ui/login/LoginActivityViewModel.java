@@ -21,7 +21,7 @@ import retrofit2.Response;
 
 public class LoginActivityViewModel extends AndroidViewModel {
     Context context;
-    private MutableLiveData<String> error;
+    private MutableLiveData<String> mensaje;
     private ApiClient apiClient;
     public LoginActivityViewModel(@NonNull Application application) {
         super(application);
@@ -30,10 +30,10 @@ public class LoginActivityViewModel extends AndroidViewModel {
     }
 
     public LiveData<String> getError() {
-        if (error == null) {
-            error = new MutableLiveData<>();
+        if (mensaje == null) {
+            mensaje = new MutableLiveData<>();
         }
-        return error;
+        return mensaje;
     }
 
     public void autenticar(final String usuario, String contraseña) {
@@ -47,13 +47,14 @@ public class LoginActivityViewModel extends AndroidViewModel {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("token", "Bearer " + response.body());
                     editor.commit();
+                    mensaje.postValue("Inicio de sesión exitoso");
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.putExtra("login", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 } else {
                     try {
-                        error.postValue(response.errorBody().string());
+                        mensaje.postValue(response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

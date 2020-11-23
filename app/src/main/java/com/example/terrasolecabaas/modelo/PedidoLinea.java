@@ -5,18 +5,18 @@ import java.io.Serializable;
 public class PedidoLinea implements Serializable {
     private int id;
     private int pedidoId;
-    private int producto_servicioId;
+    private int producto_ServicioId;
     private double precioPorUnidad;
     public int cantidad;
-    private Producto_Servicio producto_servicio;
-
-    public PedidoLinea(int id, int pedidoId, int producto_servicioId, double precioPorUnidad, int cantidad, Producto_Servicio producto_servicio) {
+    private Producto_Servicio producto_Servicio;
+    public PedidoLinea() {}
+    public PedidoLinea(int id, int pedidoId, int producto_ServicioId, double precioPorUnidad, int cantidad, Producto_Servicio producto_Servicio) {
         this.id = id;
         this.pedidoId = pedidoId;
-        this.producto_servicioId = producto_servicioId;
+        this.producto_ServicioId = producto_ServicioId;
         this.precioPorUnidad = precioPorUnidad;
         this.cantidad = cantidad;
-        this.producto_servicio = producto_servicio;
+        this.producto_Servicio = producto_Servicio;
     }
 
     public int getId() {
@@ -35,12 +35,12 @@ public class PedidoLinea implements Serializable {
         this.pedidoId = pedidoId;
     }
 
-    public int getProducto_servicioId() {
-        return producto_servicioId;
+    public int getProducto_ServicioId() {
+        return producto_ServicioId;
     }
 
-    public void setProducto_servicioId(int producto_servicioId) {
-        this.producto_servicioId = producto_servicioId;
+    public void setProducto_ServicioId(int producto_ServicioId) {
+        this.producto_ServicioId = producto_ServicioId;
     }
 
     public double getPrecioPorUnidad() {
@@ -59,11 +59,11 @@ public class PedidoLinea implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public Producto_Servicio getProducto_servicio() {
-        return producto_servicio;
+    public Producto_Servicio getProducto_Servicio() {
+        return producto_Servicio;
     }
 
-    public void setProducto_servicio(Producto_Servicio producto_servicio) {
-        this.producto_servicio = producto_servicio;
+    public void setProducto_Servicio(Producto_Servicio producto_Servicio) {
+        this.producto_Servicio = producto_Servicio;
     }
 }

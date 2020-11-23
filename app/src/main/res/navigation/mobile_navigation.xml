@@ -4,13 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/fragment_perfil">
-
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.terrasolecabaas.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
-
     <fragment
         android:id="@+id/fragment_pedidos"
         android:name="com.example.terrasolecabaas.ui.pedidos.PedidosFragment"
@@ -21,7 +14,11 @@
         android:id="@+id/fragment_productosyservicios"
         android:name="com.example.terrasolecabaas.ui.productosyservicios.ProductosYServiciosFragment"
         android:label="@string/ProductosYServicios"
-        tools:layout="@layout/fragment_productosyservicios" />
+        tools:layout="@layout/fragment_productosyservicios" >
+        <action
+            android:id="@+id/action_fragment_productosyservicios_to_fragment_pedido"
+            app:destination="@id/fragment_pedido" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_logout"
         android:name="com.example.terrasolecabaas.ui.logout.LogoutFragment"

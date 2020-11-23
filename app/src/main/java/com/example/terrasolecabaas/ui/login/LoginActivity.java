@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        RUTA = "http://192.168.0.106:45463/";
+        RUTA = "http://192.168.0.106:45455/";
         inicializar();
 
     }
@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 loginActivityViewModel.autenticar(etUsuario.getText().toString(), etContraseña.getText().toString());
+                etContraseña.setText("");
             }
         });
     }
