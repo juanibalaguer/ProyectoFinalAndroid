@@ -39,7 +39,7 @@ public class PedidoFragment extends Fragment {
     private ListView lvPedidoLineas;
     private TextView tvMonto;
     private EditText etTitulo;
-    private Button btSeleccionarFecha, btSeleccionarHora, btConfirmarPedido;
+    private Button btSeleccionarFecha, btSeleccionarHora, btConfirmarPedido, btAgregarItems;
     private PedidoViewModel pedidoViewModel;
     private PedidoLineaAdapter pedidoLineaAdapter;
 
@@ -58,6 +58,7 @@ public class PedidoFragment extends Fragment {
         btSeleccionarHora = view.findViewById(R.id.btSeleccionarHora);
         btSeleccionarFecha = view.findViewById(R.id.btSeleccionarFecha);
         btConfirmarPedido = view.findViewById(R.id.btConfirmarPedido);
+        btAgregarItems = view.findViewById(R.id.btAgregarItems);
         pedidoViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()).create(PedidoViewModel.class);
         btSeleccionarFecha.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +72,12 @@ public class PedidoFragment extends Fragment {
                 seleccionarHora();
             }
         });
+        btAgregarItems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.fragment_productosyservicios);
+            }
+        });
         btConfirmarPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +88,6 @@ public class PedidoFragment extends Fragment {
                 }
             }
         });
-
         pedidoViewModel.getPedido().observe(getViewLifecycleOwner(), new Observer<Pedido>() {
             @Override
             public void onChanged(Pedido pedido) {
@@ -90,14 +96,9 @@ public class PedidoFragment extends Fragment {
                     lvPedidoLineas.setAdapter(adapter);
                     tvMonto.setText(pedido.getMontoPedido() + "");
                     etTitulo.setText(pedido.getTitulo());
+
                 } else {
-                    btConfirmarPedido.setText("Agregar ítems");
-                    btConfirmarPedido.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.fragment_productosyservicios);
-                        }
-                    });
+                    btConfirmarPedido.setEnabled(false);
                 }
             }
         });
@@ -122,7 +123,7 @@ public class PedidoFragment extends Fragment {
                 }
             }
         });
-        pedidoViewModel.cargarItems(getArguments());
+        pedidoViewModel.cargarPedido(getArguments(), etTitulo.getText().toString());
     }
     public void seleccionarFecha() {
         Calendar calendar = Calendar.getInstance();

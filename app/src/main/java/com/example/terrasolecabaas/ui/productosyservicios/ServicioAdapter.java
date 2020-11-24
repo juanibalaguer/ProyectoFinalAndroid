@@ -88,15 +88,19 @@ public class ServicioAdapter extends  RecyclerView.Adapter<ServicioAdapter.ViewH
             super(itemView);
             ivFotoProducto = itemView.findViewById(R.id.ivFotoProducto);
             tvNombreProductoItem = itemView.findViewById(R.id.tvNombreProductoItem);
-            btAgregar = itemView.findViewById(R.id.btAgregar);
-            btAgregar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("servicio", servicios.get(getAdapterPosition()));
-                    Navigation.findNavController((Activity) context, R.id.nav_host_fragment).navigate(R.id.fragment_pedido, bundle);
-                }
-            });
+            if(context.getSharedPreferences("cabaña", Context.MODE_PRIVATE).getString("rol", "-") == "inquilino") {
+                btAgregar = itemView.findViewById(R.id.btAgregar);
+                btAgregar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("servicio", servicios.get(getAdapterPosition()));
+                        Navigation.findNavController((Activity) context, R.id.nav_host_fragment).navigate(R.id.fragment_pedido, bundle);
+                    }
+                });
+            } else {
+                btAgregar.setVisibility(View.GONE);
+            }
         }
     }
 }

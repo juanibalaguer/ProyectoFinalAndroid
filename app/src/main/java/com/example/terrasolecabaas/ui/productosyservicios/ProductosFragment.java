@@ -33,16 +33,19 @@ public class ProductosFragment extends Fragment {
         inicializar(root);
         return root;
     }
-
     private void inicializar(View view) {
         rvProductos = view.findViewById(R.id.rvProductos);
         btComenzarPedido = view.findViewById(R.id.btComenzarPedido);
-        btComenzarPedido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.fragment_pedido);
-            }
-        });
+        if(getContext().getSharedPreferences("cabaña", 0).getString("rol", "") == "inquilino") {
+            btComenzarPedido.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.fragment_pedido);
+                }
+            });
+        } else {
+            btComenzarPedido.setVisibility(View.GONE);
+        }
         productosYServiciosViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()).create(ProductosYServiciosViewModel.class);
         productosYServiciosViewModel.getProductos().observe(getViewLifecycleOwner(), new Observer<ArrayList<Producto_Servicio>>() {
             @Override

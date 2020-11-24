@@ -50,26 +50,52 @@ public class PedidosViewModel extends AndroidViewModel {
     }
     public void cargarPedidos() {
         String token = sharedPreferences.getString("token", "");
-        Call<ArrayList<Pedido>> callPedidos = ApiClient.getMyApiClient().getPedidosPorInquilino(token);
-        callPedidos.enqueue(new Callback<ArrayList<Pedido>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Pedido>> call, Response<ArrayList<Pedido>> response) {
-                if(response.isSuccessful()) {
-                    mutablePedidos.postValue(response.body());
-                } else {
-                    try {
-                        mutablePedidos.setValue(new ArrayList<Pedido>());
-                        Log.d("Error al traer pedidos", response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        String rol = sharedPreferences.getString("rol", "");
+        if(rol == "inquilino") {
+            Call<ArrayList<Pedido>> callPedidos = ApiClient.getMyApiClient().getPedidosPorInquilino(token);
+            callPedidos.enqueue(new Callback<ArrayList<Pedido>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Pedido>> call, Response<ArrayList<Pedido>> response) {
+                    if(response.isSuccessful()) {
+                        mutablePedidos.postValue(response.body());
+                    } else {
+                        try {
+                            mutablePedidos.setValue(new ArrayList<Pedido>());
+                            Log.d("Error al traer pedidos", response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<Pedido>> call, Throwable t) {
-                Log.d("Error servidor", t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<ArrayList<Pedido>> call, Throwable t) {
+                    Log.d("Error servidor", t.getMessage());
+                }
+            });
+        }
+        else {
+            Call<ArrayList<Pedido>> callPedidos = ApiClient.getMyApiClient().getPedidosPendientes(token);
+            callPedidos.enqueue(new Callback<ArrayList<Pedido>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Pedido>> call, Response<ArrayList<Pedido>> response) {
+                    if(response.isSuccessful()) {
+                        mutablePedidos.postValue(response.body());
+                    } else {
+                        try {
+                            mutablePedidos.setValue(new ArrayList<Pedido>());
+                            Log.d("Error al traer pedidos", response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call<ArrayList<Pedido>> call, Throwable t) {
+                    Log.d("Error servidor", t.getMessage());
+                }
+            });
+        }
+
     }
     public void cancelarPedido(int id) {
         String token = sharedPreferences.getString("token", "");
@@ -91,5 +117,54 @@ public class PedidosViewModel extends AndroidViewModel {
                 Log.d("Error del servidor", t.getMessage());
             }
         });
+    }
+    public void cambiarEstadoPedido(Pedido pedido) {
+        String token = sharedPreferences.getString("token", "");
+        if(pedido.getEstado() == 1) {
+            pedido.setEstado(2);
+        } else {
+            pedido.setEstado(3);
+        }
+        Call<Pedido> callEditarPedido = ApiClient.getMyApiClient().putPedido(token, pedido);
+        callEditarPedido.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+                if(response.isSuccessful()) {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_LONG).show();
+                    cargarPedidos();
+                } else {
+
+                    Log.d("Error al borrar", response.message());
+                    Toast.makeText(context, response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                Log.d("Error del servidor", t.getMessage());
+            }
+        });
+    }
+    public void entregarPedido(Pedido pedido) {
+        String token = sharedPreferences.getString("token", "");
+        pedido.setEstado(3);
+        Call<Pedido> callEditarPedido = ApiClient.getMyApiClient().putPedido(token, pedido);
+        callEditarPedido.enqueue(new Callback<Pedido>() {
+            @Override
+            public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+                if(response.isSuccessful()) {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_LONG).show();
+                    cargarPedidos();
+                } else {
+
+                    Log.d("Error al borrar", response.message());
+                    Toast.makeText(context, response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<Pedido> call, Throwable t) {
+                Log.d("Error del servidor", t.getMessage());
+            }
+        });
+        cargarPedidos();
     }
 }

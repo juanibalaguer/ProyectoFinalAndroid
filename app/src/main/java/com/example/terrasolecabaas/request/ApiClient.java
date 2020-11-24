@@ -62,10 +62,14 @@ public class ApiClient {
         Call<ArrayList<Producto_Servicio>> getServicios(@Header("Authorization") String token);
         @POST("Pedidos/")
         Call<Pedido> postPedido(@Header("Authorization") String token, @Body Pedido pedido);
+        @PUT("Pedidos/")
+        Call<Pedido> putPedido(@Header("Authorization") String token, @Body Pedido pedido);
         @GET("Pedidos/Inquilino/")
         Call<ArrayList<Pedido>> getPedidosPorInquilino(@Header("Authorization") String token);
         @DELETE("Pedidos/{id}")
         Call<ResponseBody> deletePedido(@Header("Authorization") String token, @Path("id") int id);
+        @GET("Pedidos/PedidosPendientes/")
+        Call<ArrayList<Pedido>> getPedidosPendientes(@Header("Authorization") String token);
         /*
         @GET("Inmuebles/Vigentes")
         Call<ArrayList<Inmueble>> getInmueblesVigentes(@Header("Authorization") String token);

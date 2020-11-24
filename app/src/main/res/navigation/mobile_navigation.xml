@@ -8,7 +8,11 @@
         android:id="@+id/fragment_pedidos"
         android:name="com.example.terrasolecabaas.ui.pedidos.PedidosFragment"
         android:label="@string/Pedidos"
-        tools:layout="@layout/fragment_pedidos" />
+        tools:layout="@layout/fragment_pedidos" >
+        <action
+            android:id="@+id/action_fragment_pedidos_to_fragment_detalle_pedido"
+            app:destination="@id/fragment_detalle_pedido" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_productosyservicios"
@@ -34,4 +38,13 @@
         android:name="com.example.terrasolecabaas.ui.pedido.PedidoFragment"
         android:label="fragment_pedido"
         tools:layout="@layout/fragment_pedido" />
+    <fragment
+        android:id="@+id/fragment_detalle_pedido"
+        android:name="com.example.terrasolecabaas.ui.pedido.DetallePedido"
+        android:label="fragment_detalle_pedido"
+        tools:layout="@layout/fragment_detalle_pedido" >
+        <action
+            android:id="@+id/action_fragment_detalle_pedido_to_fragment_pedidos"
+            app:destination="@id/fragment_pedidos" />
+    </fragment>
 </navigation>

@@ -50,12 +50,11 @@ import retrofit2.Response;
 
 public class PedidoViewModel extends AndroidViewModel {
     private Context context;
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
     private MutableLiveData<Pedido> mutablePedido;
     private MutableLiveData<String> mutableStringFecha;
     private MutableLiveData<String> mutableStringHora;
     private MutableLiveData<Boolean> mutablePedidoExitoso;
-    private MutableLiveData<Boolean> mutableHayItems;
     public PedidoViewModel(@NonNull Application application) {
         super(application);
         context = getApplication().getApplicationContext();
@@ -87,9 +86,9 @@ public class PedidoViewModel extends AndroidViewModel {
         return mutablePedidoExitoso;
     }
 
-    public void cargarItems(Bundle bundle) {
+    public void cargarPedido(Bundle bundle, String titulo) {
         if(bundle != null) {
-            if((bundle.getSerializable("servicio") != null)) {
+            if((bundle.getSerializable("servicio") != null)) { //Es un servicio (no tiene líneas pedido)
                 Producto_Servicio servicio = (Producto_Servicio) bundle.getSerializable("servicio");
                 Pedido pedido = new Pedido();
                 PedidoLinea pedidoLinea = new PedidoLinea(0, 0, servicio.getId(), 0, 1, servicio);
@@ -99,8 +98,14 @@ public class PedidoViewModel extends AndroidViewModel {
                 pedido.setMontoPedido(0);
                 mutablePedido.setValue(pedido);
                 return;
-            } else {
+            } else { // Ser carga un pedido para ver/editar
                 Pedido pedido = (Pedido) bundle.getSerializable("pedido");
+                sharedPreferences.edit().putInt("idPedido", pedido.getId()).commit();
+                if(pedido.getPedidoLineas().get(0).getProducto_Servicio().getConsumible() == 1){
+                    Gson gson = new Gson();
+                    String jsonPedidoLineas = gson.toJson(pedido.getPedidoLineas());
+                    sharedPreferences.edit().putString("pedidolineas", jsonPedidoLineas).commit();
+                }
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm");
                 String fechaParseada = formato.format(pedido.getFechaPedido());
                 String fecha = fechaParseada.substring(0, 10);
@@ -127,7 +132,7 @@ public class PedidoViewModel extends AndroidViewModel {
             montoTotal += pedidoLinea.getPrecioPorUnidad() * pedidoLinea.getCantidad();
         }
         pedido.setMontoPedido(montoTotal);
-        pedido.setTitulo("");
+        pedido.setTitulo(titulo);
         mutablePedido.setValue(pedido);
     }
     public void eliminarItem(int indiceItem) {
@@ -141,7 +146,7 @@ public class PedidoViewModel extends AndroidViewModel {
         jsonPedidoLineas = gson.toJson(pedidoLineas);
         editor.putString("pedidolineas", jsonPedidoLineas);
         editor.apply();
-        cargarItems(null);
+        cargarPedido(null, mutablePedido.getValue().getTitulo());
     }
     public void confirmarPedido(String fecha, String hora, String titulo) throws ParseException {
         String token = sharedPreferences.getString("token", "");
@@ -155,17 +160,52 @@ public class PedidoViewModel extends AndroidViewModel {
         Date dateJson = formatter.parse(stringFechaJson);
         //String formattedDateString = formatter.format(date);
         pedido.setFechaPedido(dateJson);
+        pedido.setTitulo(titulo);
         int estado = 1;
         int idEstadia = sharedPreferences.getInt("idEstadia", -1);
-        pedido.setTitulo(titulo);
         pedido.setEstado(estado);
         pedido.setEstadiaId(idEstadia);
+        int idPedido = sharedPreferences.getInt("idPedido", -1);
+        if(idPedido != -1) {
+            pedido.setId(idPedido);
+            checkearCampos(pedido);
+            Call<Pedido> callPedido = ApiClient.getMyApiClient().putPedido(token, pedido);
+            callPedido.enqueue(new Callback<Pedido>() {
+                @Override
+                public void onResponse(Call<Pedido> call, Response<Pedido> response) {
+                    if (response.isSuccessful()) {
+                        sharedPreferences.edit().remove("pedidolineas").commit();
+                        sharedPreferences.edit().remove("pedido").commit();
+                        sharedPreferences.edit().remove("idPedido").commit();
+                        Toast.makeText(context, "Tu pedido fue modificado exitosamente", Toast.LENGTH_LONG).show();
+                        mutablePedidoExitoso.postValue(true);
+                    } else {
+                        try {
+                            Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                            Log.d("Error al modificar", response.errorBody().string());
+                            mutablePedidoExitoso.postValue(false);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call<Pedido> call, Throwable t) {
+                    Log.d("Error servidor: ", t.getMessage());
+                    mutablePedidoExitoso.postValue(false);
+                }
+            });
+            return;
+        }
+        checkearCampos(pedido);
         Call<Pedido> callPedido = ApiClient.getMyApiClient().postPedido(token, pedido);
         callPedido.enqueue(new Callback<Pedido>() {
             @Override
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
                 if (response.isSuccessful()) {
                     sharedPreferences.edit().remove("pedidolineas").commit();
+                    sharedPreferences.edit().remove("pedido").commit();
+                    sharedPreferences.edit().remove("idPedido").commit();
                     Toast.makeText(context, "Tu pedido fue registrado exitosamente", Toast.LENGTH_LONG).show();
                     mutablePedidoExitoso.postValue(true);
                 } else {
@@ -184,7 +224,11 @@ public class PedidoViewModel extends AndroidViewModel {
                 mutablePedidoExitoso.postValue(false);
             }
         });
-
     }
-
+    public void checkearCampos(Pedido pedido) {
+        if(pedido.getTitulo() == "" || pedido.getTitulo() == null) {
+            Toast.makeText(context, "El campo título es obligatorio", Toast.LENGTH_LONG).show();
+            return;
+        }
+    }
 }

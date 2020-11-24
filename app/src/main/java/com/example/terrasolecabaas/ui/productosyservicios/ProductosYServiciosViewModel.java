@@ -51,7 +51,6 @@ public class ProductosYServiciosViewModel extends AndroidViewModel {
     }
 
     public void cargarProductos() {
-
         String token = sharedPreferences.getString("token", "");
         Call<ArrayList<Producto_Servicio>> callProductos = ApiClient.getMyApiClient().getProductos(token);
         callProductos.enqueue(new Callback<ArrayList<Producto_Servicio>>() {
@@ -67,7 +66,6 @@ public class ProductosYServiciosViewModel extends AndroidViewModel {
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<Producto_Servicio>> call, Throwable t) {
                 Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();

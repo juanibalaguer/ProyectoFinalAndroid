@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/fondo_item_pedido">
 
     <ImageButton
         android:id="@+id/btCancelarPedido"
@@ -15,43 +16,56 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_action_delete" />
+        app:srcCompat="@drawable/ic_action_delete"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="0dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:paddingBottom="5dp"
+        tools:paddingStart="10dp"
+        tools:paddingTop="5dp" />
 
     <TextView
         android:id="@+id/tvFechaPedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="0dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintTop_toBottomOf="@+id/tvMontoPedido"
+        tools:paddingBottom="5dp"
+        tools:paddingStart="10dp"
+        tools:paddingTop="5dp" />
 
     <TextView
         android:id="@+id/tvMontoPedido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="0dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/tvTitulo"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitulo" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitulo"
+        tools:paddingBottom="5dp"
+        tools:paddingStart="10dp"
+        tools:paddingTop="5dp" />
 
     <TextView
         android:id="@+id/tvEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="0dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/tvFechaPedido"
-        app:layout_constraintTop_toBottomOf="@+id/tvFechaPedido" />
+        app:layout_constraintTop_toBottomOf="@+id/tvFechaPedido"
+        tools:paddingBottom="5dp"
+        tools:paddingStart="10dp"
+        tools:paddingTop="5dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
@@ -65,21 +79,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.6" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.7" />
+        app:layout_constraintGuide_percent="0.75" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.82" />
+        app:layout_constraintGuide_percent="0.9" />
 
     <ImageButton
         android:id="@+id/btEdit"
@@ -90,6 +104,18 @@
         app:layout_constraintEnd_toStartOf="@+id/btCancelarPedido"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_action_edit" />
+        app:srcCompat="@drawable/ic_action_edit"
+        android:visibility="visible"/>
+
+    <ImageButton
+        android:id="@+id/btDetalles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        app:layout_constraintStart_toStartOf="@+id/guideline6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_action_ver"
+        android:backgroundTint="@color/transparente"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

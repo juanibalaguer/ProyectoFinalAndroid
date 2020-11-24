@@ -1,6 +1,7 @@
 package com.example.terrasolecabaas.ui.productosyservicios;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -95,31 +96,38 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
             btSumar = itemView.findViewById(R.id.btSumar);
             btRestar = itemView.findViewById(R.id.btRestar);
             btAgregar = itemView.findViewById(R.id.btAgregar);
-            btRestar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int cantidad = Integer.valueOf(tvCantidad.getText().toString());
-                    if (cantidad > 0) {
-                        cantidad --;
+            if(context.getSharedPreferences("cabaña", Context.MODE_PRIVATE).getString("rol", "-") == "inquilino") {
+                btRestar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int cantidad = Integer.valueOf(tvCantidad.getText().toString());
+                        if (cantidad > 0) {
+                            cantidad --;
+                        }
+                        tvCantidad.setText(cantidad + "");
                     }
-                    tvCantidad.setText(cantidad + "");
-                }
-            });
-            btSumar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int cantidad = Integer.valueOf(tvCantidad.getText().toString());
-                    cantidad ++;
-                    tvCantidad.setText(cantidad + "");
-                }
-            });
-            btAgregar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    productosYServiciosViewModel.agregarProducto(productos.get(getAdapterPosition()),
-                            Integer.valueOf(tvCantidad.getText().toString()));
-                }
-            });
+                });
+                btSumar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int cantidad = Integer.valueOf(tvCantidad.getText().toString());
+                        cantidad ++;
+                        tvCantidad.setText(cantidad + "");
+                    }
+                });
+                btAgregar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        productosYServiciosViewModel.agregarProducto(productos.get(getAdapterPosition()),
+                                Integer.valueOf(tvCantidad.getText().toString()));
+                    }
+                });
+            } else {
+                btAgregar.setVisibility(View.GONE);
+                btSumar.setVisibility(View.GONE);
+                btRestar.setVisibility(View.GONE);
+            }
+
         }
     }
 }
