@@ -96,7 +96,8 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
             btSumar = itemView.findViewById(R.id.btSumar);
             btRestar = itemView.findViewById(R.id.btRestar);
             btAgregar = itemView.findViewById(R.id.btAgregar);
-            if(context.getSharedPreferences("cabaña", Context.MODE_PRIVATE).getString("rol", "-") == "inquilino") {
+            String rol = context.getSharedPreferences("cabaña", 0).getString("rol", "");
+            if(rol.equals("inquilino")) {
                 btRestar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

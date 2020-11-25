@@ -30,6 +30,8 @@ import com.example.terrasolecabaas.ui.login.LoginActivity;
 import com.example.terrasolecabaas.ui.pedido.PedidoViewModel;
 import com.example.terrasolecabaas.ui.productosyservicios.ProductosYServiciosViewModel;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -87,48 +89,59 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
             default :
                 tvEstado.setText("Entregado");
         }
+        TextView tvCabaña = viewPedido.findViewById(R.id.tvCabaña);
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm");
         String fechaParseada = formato.format(pedidos.get(position).getFechaPedido());
         tvFechaPedido.setText(fechaParseada);
-        if(pedidos.get(position).getEstado() < 2) {
-            ImageButton btCancelarPedido = viewPedido.findViewById(R.id.btCancelarPedido);
-            ImageButton btEdit = viewPedido.findViewById(R.id.btEdit);
-            ImageButton btDetalle = viewPedido.findViewById(R.id.btDetalles);
-            btCancelarPedido.setVisibility(View.VISIBLE);
-            btEdit.setVisibility(View.VISIBLE);
-            if(sharedPreferences.getString("rol", "") == "inquilino") {
-                btCancelarPedido.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        pedidosViewModel.cancelarPedido(pedidos.get(position).getId());
-                    }
-                });
-            } else {
-                pedidosViewModel.entregarPedido(pedidos.get(position));
-            }
-            if(sharedPreferences.getString("rol", "") == "inquilino") {
-                btEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Bundle bundle = new Bundle();
-                        Pedido pedido = pedidos.get(position);
-                        bundle.putSerializable("pedido", pedido);
-                        Navigation.findNavController( (Activity) context , R.id.nav_host_fragment).navigate(R.id.fragment_pedido, bundle);
-                    }
-                });
-            }
-            else {
-                pedidosViewModel.cambiarEstadoPedido(pedidos.get(position));
-            }
-            btDetalle.setOnClickListener(new View.OnClickListener() {
+        String rol = context.getSharedPreferences("cabaña", 0).getString("rol", "");
+        ImageButton btCancelarPedido = viewPedido.findViewById(R.id.btCancelarPedido);
+        ImageButton btEdit = viewPedido.findViewById(R.id.btEdit);
+        ImageButton btDetalle = viewPedido.findViewById(R.id.btDetalles);
+        if(rol.equals("inquilino")) {
+            btCancelarPedido.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pedidosViewModel.cancelarPedido(pedidos.get(position).getId());
+                }
+            });
+            btEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
                     Pedido pedido = pedidos.get(position);
                     bundle.putSerializable("pedido", pedido);
-                    Navigation.findNavController( (Activity) context , R.id.nav_host_fragment).navigate(R.id.fragment_detalle_pedido, bundle);
+                    Navigation.findNavController( (Activity) context , R.id.nav_host_fragment).navigate(R.id.fragment_pedido, bundle);
                 }
             });
+        } else {
+            tvCabaña.setVisibility(View.VISIBLE);
+            tvCabaña.setText(pedidos.get(position).getEstadiaId() + "");
+            btCancelarPedido.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pedidosViewModel.entregarPedido(pedidos.get(position));
+                }
+            });
+            btEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pedidosViewModel.cambiarEstadoPedido(pedidos.get(position));
+                }
+            });
+        }
+
+        btDetalle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                Pedido pedido = pedidos.get(position);
+                bundle.putSerializable("pedido", pedido);
+                Navigation.findNavController( (Activity) context , R.id.nav_host_fragment).navigate(R.id.fragment_detalle_pedido, bundle);
+            }
+        });
+        if(rol.equals("inquilino") && pedidos.get(position).getEstado() > 1) {
+            btCancelarPedido.setVisibility(View.GONE);
+            btEdit.setVisibility(View.GONE);
         }
         return viewPedido;
     }

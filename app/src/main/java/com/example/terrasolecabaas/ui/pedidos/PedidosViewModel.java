@@ -51,7 +51,7 @@ public class PedidosViewModel extends AndroidViewModel {
     public void cargarPedidos() {
         String token = sharedPreferences.getString("token", "");
         String rol = sharedPreferences.getString("rol", "");
-        if(rol == "inquilino") {
+        if(rol.equals("inquilino")) {
             Call<ArrayList<Pedido>> callPedidos = ApiClient.getMyApiClient().getPedidosPorInquilino(token);
             callPedidos.enqueue(new Callback<ArrayList<Pedido>>() {
                 @Override
@@ -60,7 +60,7 @@ public class PedidosViewModel extends AndroidViewModel {
                         mutablePedidos.postValue(response.body());
                     } else {
                         try {
-                            mutablePedidos.setValue(new ArrayList<Pedido>());
+                            mutablePedidos.postValue(new ArrayList<Pedido>());
                             Log.d("Error al traer pedidos", response.errorBody().string());
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -82,7 +82,7 @@ public class PedidosViewModel extends AndroidViewModel {
                         mutablePedidos.postValue(response.body());
                     } else {
                         try {
-                            mutablePedidos.setValue(new ArrayList<Pedido>());
+                            mutablePedidos.postValue(new ArrayList<Pedido>());
                             Log.d("Error al traer pedidos", response.errorBody().string());
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -123,7 +123,7 @@ public class PedidosViewModel extends AndroidViewModel {
         if(pedido.getEstado() == 1) {
             pedido.setEstado(2);
         } else {
-            pedido.setEstado(3);
+            pedido.setEstado(1);
         }
         Call<Pedido> callEditarPedido = ApiClient.getMyApiClient().putPedido(token, pedido);
         callEditarPedido.enqueue(new Callback<Pedido>() {

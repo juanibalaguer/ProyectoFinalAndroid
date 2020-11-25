@@ -26,6 +26,7 @@ public class ProductosFragment extends Fragment {
     private ProductosYServiciosViewModel productosYServiciosViewModel;
     private ProductoAdapter productoAdapter;
     private Button btComenzarPedido;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -36,7 +37,8 @@ public class ProductosFragment extends Fragment {
     private void inicializar(View view) {
         rvProductos = view.findViewById(R.id.rvProductos);
         btComenzarPedido = view.findViewById(R.id.btComenzarPedido);
-        if(getContext().getSharedPreferences("cabaña", 0).getString("rol", "") == "inquilino") {
+        String rol = getContext().getSharedPreferences("cabaña", 0).getString("rol", "");
+        if(rol.equals("inquilino")) {
             btComenzarPedido.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

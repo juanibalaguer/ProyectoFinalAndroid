@@ -26,6 +26,7 @@ import retrofit2.Response;
 public class PerfilViewModel extends AndroidViewModel {
     Context context;
     MutableLiveData<Inquilino> mutableInquilino;
+    MutableLiveData<Usuario> mutableUsuario;
     SharedPreferences sharedPreferences;
     public PerfilViewModel(@NonNull Application application) {
         super(application);
@@ -38,6 +39,12 @@ public class PerfilViewModel extends AndroidViewModel {
         }
         return mutableInquilino;
     }
+    public LiveData<Usuario> getUsuario() {
+        if (mutableUsuario == null) {
+            mutableUsuario = new MutableLiveData<>();
+        }
+        return mutableUsuario;
+    }
     public void cargarUsuario(boolean login) {
         String token = sharedPreferences.getString("token", "");
         if(login) {
@@ -47,14 +54,29 @@ public class PerfilViewModel extends AndroidViewModel {
                 pedirDatos();
             }
             else {
-                Inquilino inquilino = new Inquilino(
-                        sharedPreferences.getInt("idInquilino", -1),
-                        sharedPreferences.getString("nombre", "-"),
-                        sharedPreferences.getString("apellido", "-"),
-                        sharedPreferences.getString("dni", "-"),
-                        sharedPreferences.getString("email", "-"),
-                        sharedPreferences.getString("telefono", "-"));
-                mutableInquilino.setValue(inquilino);
+                String rol = sharedPreferences.getString("rol", "");
+                if(rol.equals("inquilino")) {
+                    Inquilino inquilino = new Inquilino(
+                            sharedPreferences.getInt("idInquilino", -1),
+                            sharedPreferences.getString("nombre", "-"),
+                            sharedPreferences.getString("apellido", "-"),
+                            sharedPreferences.getString("dni", "-"),
+                            sharedPreferences.getString("email", "-"),
+                            sharedPreferences.getString("telefono", "-"));
+                    mutableInquilino.setValue(inquilino);
+                }  else {
+                    if(rol.equals("empleado")) {
+                        Usuario usuario = new Usuario(
+                                sharedPreferences.getInt("idUsuario", -1),
+                                sharedPreferences.getString("nombre", "-"),
+                                sharedPreferences.getString("apellido", "-"),
+                                sharedPreferences.getString("dni", "-"),
+                                sharedPreferences.getString("email", "-"),
+                                sharedPreferences.getString("telefono", "-"),
+                                sharedPreferences.getInt("rol", -1));
+                        mutableUsuario.setValue(usuario);
+                    }
+                }
             }
         }
     }
@@ -86,7 +108,8 @@ public class PerfilViewModel extends AndroidViewModel {
                                     editor.putString("dni", estadia.getInquilino().getDni());
                                     editor.putString("telefono", estadia.getInquilino().getTelefono());
                                     editor.commit();
-                                } else {
+                                }
+                                else {
                                     try {
                                         Log.d("Salida",  response.errorBody().string());
                                     } catch (IOException e) {
@@ -99,12 +122,13 @@ public class PerfilViewModel extends AndroidViewModel {
                                 Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         });
-                    } else {
-                        try {
-                            Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_LONG).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    }
+                    else {
+                        editor.putString("nombre", usuario.getNombre());
+                        editor.putString("apellido", usuario.getApellido());
+                        editor.putString("dni", usuario.getDni());
+                        editor.putString("telefono", usuario.getTelefono());
+                        mutableUsuario.setValue(usuario);
                     }
                     editor.commit();
                 } else {

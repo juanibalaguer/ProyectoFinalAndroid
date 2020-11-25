@@ -36,12 +36,12 @@
     <fragment
         android:id="@+id/fragment_pedido"
         android:name="com.example.terrasolecabaas.ui.pedido.PedidoFragment"
-        android:label="fragment_pedido"
+        android:label="@string/Pedido"
         tools:layout="@layout/fragment_pedido" />
     <fragment
         android:id="@+id/fragment_detalle_pedido"
         android:name="com.example.terrasolecabaas.ui.pedido.DetallePedido"
-        android:label="fragment_detalle_pedido"
+        android:label="@string/DetallePedido"
         tools:layout="@layout/fragment_detalle_pedido" >
         <action
             android:id="@+id/action_fragment_detalle_pedido_to_fragment_pedidos"

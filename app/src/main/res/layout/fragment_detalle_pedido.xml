@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/tvMontoTotalDetalle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/tvTituloDetalle"
             app:layout_constraintTop_toBottomOf="@+id/tvTituloDetalle" />
 
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/tvMontoTotalDetalle"
+            app:layout_constraintBottom_toTopOf="@+id/lvItemsPedidoDetalle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.01999998"
+            app:layout_constraintVertical_bias="0.100000024"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
@@ -55,7 +55,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTituloDetalle" />
+            app:layout_constraintTop_toBottomOf="@+id/lvItemsPedidoDetalle" />
 
         <TextView
             android:id="@+id/tvFechaEntregaDetalle"

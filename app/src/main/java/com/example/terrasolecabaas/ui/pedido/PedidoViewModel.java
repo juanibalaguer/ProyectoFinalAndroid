@@ -50,15 +50,16 @@ import retrofit2.Response;
 
 public class PedidoViewModel extends AndroidViewModel {
     private Context context;
+    private Gson gson;
     private SharedPreferences sharedPreferences;
     private MutableLiveData<Pedido> mutablePedido;
     private MutableLiveData<String> mutableStringFecha;
-    private MutableLiveData<String> mutableStringHora;
     private MutableLiveData<Boolean> mutablePedidoExitoso;
     public PedidoViewModel(@NonNull Application application) {
         super(application);
         context = getApplication().getApplicationContext();
         sharedPreferences = context.getSharedPreferences("cabaña", Context.MODE_PRIVATE);
+        gson = new Gson();
     }
 
     public LiveData<Pedido> getPedido() {
@@ -73,12 +74,6 @@ public class PedidoViewModel extends AndroidViewModel {
         }
         return mutableStringFecha;
     }
-    public LiveData<String> getHora() {
-        if (mutableStringHora == null) {
-            mutableStringHora = new MutableLiveData<>();
-        }
-        return mutableStringHora;
-    }
     public LiveData<Boolean> pedidoEsExitoso() {
         if (mutablePedidoExitoso == null) {
             mutablePedidoExitoso = new MutableLiveData<>();
@@ -86,7 +81,7 @@ public class PedidoViewModel extends AndroidViewModel {
         return mutablePedidoExitoso;
     }
 
-    public void cargarPedido(Bundle bundle, String titulo) {
+    public void cargarPedido(Bundle bundle) {
         if(bundle != null) {
             if((bundle.getSerializable("servicio") != null)) { //Es un servicio (no tiene líneas pedido)
                 Producto_Servicio servicio = (Producto_Servicio) bundle.getSerializable("servicio");
@@ -102,22 +97,19 @@ public class PedidoViewModel extends AndroidViewModel {
                 Pedido pedido = (Pedido) bundle.getSerializable("pedido");
                 sharedPreferences.edit().putInt("idPedido", pedido.getId()).commit();
                 if(pedido.getPedidoLineas().get(0).getProducto_Servicio().getConsumible() == 1){
-                    Gson gson = new Gson();
                     String jsonPedidoLineas = gson.toJson(pedido.getPedidoLineas());
                     sharedPreferences.edit().putString("pedidolineas", jsonPedidoLineas).commit();
                 }
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm");
                 String fechaParseada = formato.format(pedido.getFechaPedido());
-                String fecha = fechaParseada.substring(0, 10);
-                String hora = fechaParseada.substring(10, fechaParseada.length());
+                String jsonPedido = gson.toJson(pedido);
+                sharedPreferences.edit().putString("pedido", jsonPedido).commit();
                 mutablePedido.setValue(pedido);
-                mutableStringFecha.setValue(fecha);
-                mutableStringHora.setValue(hora);
+                mutableStringFecha.setValue(fechaParseada);
                 return;
             }
 
         }
-        Gson gson = new Gson();
         String jsonPedidoLineas = sharedPreferences.getString("pedidolineas", null);
         Type type = new TypeToken<ArrayList<PedidoLinea>>() {}.getType();
         ArrayList<PedidoLinea> pedidoLineas = gson.fromJson(jsonPedidoLineas, type);
@@ -125,15 +117,26 @@ public class PedidoViewModel extends AndroidViewModel {
             mutablePedido.setValue(null);
             return;
         }
-        Pedido pedido = new Pedido();
+        String jsonPedido = sharedPreferences.getString("pedido", null);
+        Type tipoPedido = new TypeToken<Pedido>() {}.getType();
+        Pedido pedido = gson.fromJson(jsonPedido, tipoPedido);
+
         pedido.setPedidoLineas(pedidoLineas);
         double montoTotal = 0;
         for (PedidoLinea pedidoLinea: pedidoLineas) {
             montoTotal += pedidoLinea.getPrecioPorUnidad() * pedidoLinea.getCantidad();
         }
-        pedido.setMontoPedido(montoTotal);
-        pedido.setTitulo(titulo);
-        mutablePedido.setValue(pedido);
+        if(pedido !=null) {
+            pedido.setMontoPedido(montoTotal);
+            mutablePedido.setValue(pedido);
+            if(pedido.getFechaPedido() != null) {
+                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm");
+                String fechaParseada = formato.format(pedido.getFechaPedido());
+                mutableStringFecha.setValue(fechaParseada);
+                jsonPedido = gson.toJson(pedido);
+                sharedPreferences.edit().putString("pedido", jsonPedido).commit();
+            }
+        }
     }
     public void eliminarItem(int indiceItem) {
         ArrayList<PedidoLinea> pedidoLineas;
@@ -146,20 +149,19 @@ public class PedidoViewModel extends AndroidViewModel {
         jsonPedidoLineas = gson.toJson(pedidoLineas);
         editor.putString("pedidolineas", jsonPedidoLineas);
         editor.apply();
-        cargarPedido(null, mutablePedido.getValue().getTitulo());
+        cargarPedido(null);
     }
-    public void confirmarPedido(String fecha, String hora, String titulo) throws ParseException {
+    public void confirmarPedido(String fecha, String titulo) throws ParseException {
         String token = sharedPreferences.getString("token", "");
         Pedido pedido = getPedido().getValue();
         //Fecha
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String dateInString = fecha + " " + hora;
-        Date date = formatter.parse(dateInString);
+        Date date = formatter.parse(fecha);
         formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
         String stringFechaJson = formatter.format(date);
-        Date dateJson = formatter.parse(stringFechaJson);
+        Date dateFormatoJson = formatter.parse(stringFechaJson);
         //String formattedDateString = formatter.format(date);
-        pedido.setFechaPedido(dateJson);
+        pedido.setFechaPedido(dateFormatoJson);
         pedido.setTitulo(titulo);
         int estado = 1;
         int idEstadia = sharedPreferences.getInt("idEstadia", -1);
@@ -174,9 +176,7 @@ public class PedidoViewModel extends AndroidViewModel {
                 @Override
                 public void onResponse(Call<Pedido> call, Response<Pedido> response) {
                     if (response.isSuccessful()) {
-                        sharedPreferences.edit().remove("pedidolineas").commit();
-                        sharedPreferences.edit().remove("pedido").commit();
-                        sharedPreferences.edit().remove("idPedido").commit();
+                        limpiarDatos();
                         Toast.makeText(context, "Tu pedido fue modificado exitosamente", Toast.LENGTH_LONG).show();
                         mutablePedidoExitoso.postValue(true);
                     } else {
@@ -203,9 +203,7 @@ public class PedidoViewModel extends AndroidViewModel {
             @Override
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
                 if (response.isSuccessful()) {
-                    sharedPreferences.edit().remove("pedidolineas").commit();
-                    sharedPreferences.edit().remove("pedido").commit();
-                    sharedPreferences.edit().remove("idPedido").commit();
+                    limpiarDatos();
                     Toast.makeText(context, "Tu pedido fue registrado exitosamente", Toast.LENGTH_LONG).show();
                     mutablePedidoExitoso.postValue(true);
                 } else {
@@ -230,5 +228,29 @@ public class PedidoViewModel extends AndroidViewModel {
             Toast.makeText(context, "El campo título es obligatorio", Toast.LENGTH_LONG).show();
             return;
         }
+    }
+    public void guardarDatos(String titulo, String fecha) throws ParseException {
+        String jsonPedido = sharedPreferences.getString("pedido", null);
+        Type tipoPedido = new TypeToken<Pedido>() {}.getType();
+        Pedido pedido = gson.fromJson(jsonPedido, tipoPedido);
+        if(pedido != null) {
+            pedido.setTitulo(titulo);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Date date = formatter.parse(fecha);
+            formatter = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+            String stringFechaJson = formatter.format(date);
+            Date dateFormatoJson = formatter.parse(stringFechaJson);
+            pedido.setFechaPedido(dateFormatoJson);
+            jsonPedido = gson.toJson(pedido);
+            sharedPreferences.edit().putString("pedido", jsonPedido).apply();
+        }
+
+    }
+    public void limpiarDatos() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("pedidolineas");
+        editor.remove("pedido");
+        editor.remove("idPedido");
+        editor.apply();
     }
 }

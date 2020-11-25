@@ -88,7 +88,8 @@ public class ServicioAdapter extends  RecyclerView.Adapter<ServicioAdapter.ViewH
             super(itemView);
             ivFotoProducto = itemView.findViewById(R.id.ivFotoProducto);
             tvNombreProductoItem = itemView.findViewById(R.id.tvNombreProductoItem);
-            if(context.getSharedPreferences("cabaña", Context.MODE_PRIVATE).getString("rol", "-") == "inquilino") {
+            String rol = context.getSharedPreferences("cabaña", 0).getString("rol", "");
+            if(rol.equals("inquilino")) {
                 btAgregar = itemView.findViewById(R.id.btAgregar);
                 btAgregar.setOnClickListener(new View.OnClickListener() {
                     @Override

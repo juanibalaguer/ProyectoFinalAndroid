@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView android:layout_height="match_parent"
+<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/oscuro"
@@ -63,7 +63,7 @@
             android:background="@drawable/fondo_login"
             app:layout_constraintBottom_toTopOf="@+id/btEditar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvRol">
 
@@ -74,7 +74,6 @@
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="textPersonName"
-                android:text="Name"
                 android:textColor="@color/golden"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/textView6"
@@ -90,7 +89,6 @@
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="textPersonName"
-                android:text="Name"
                 android:textColor="@color/golden"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/tvDni"
@@ -106,7 +104,6 @@
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="textPersonName"
-                android:text="Name"
                 android:textColor="@color/golden"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -122,7 +119,6 @@
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="textPersonName"
-                android:text="Name"
                 android:textColor="@color/golden"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/textView8"
@@ -137,7 +133,6 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Name"
                 android:textColor="@color/golden"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/textView7"
@@ -152,10 +147,11 @@
                 android:layout_height="wrap_content"
                 android:text="DNI"
                 android:textColor="@color/golden"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/etDni"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/etDni"
                 app:layout_constraintTop_toBottomOf="@+id/etApellido" />
 
             <TextView
@@ -176,10 +172,11 @@
                 android:layout_height="wrap_content"
                 android:text="E-mail"
                 android:textColor="@color/golden"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/etEmail"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/etEmail"
                 app:layout_constraintTop_toBottomOf="@+id/etDni" />
 
             <TextView
@@ -188,10 +185,11 @@
                 android:layout_height="wrap_content"
                 android:text="Apellido"
                 android:textColor="@color/golden"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/etApellido"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/etApellido"
                 app:layout_constraintTop_toBottomOf="@+id/etNombre" />
 
             <TextView
@@ -200,23 +198,26 @@
                 android:layout_height="wrap_content"
                 android:text="Teléfono"
                 android:textColor="@color/golden"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/etTelefono"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/etTelefono"
                 app:layout_constraintTop_toBottomOf="@+id/etEmail" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="65dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="Nombre"
                 android:textColor="@color/golden"
                 app:layout_constraintBottom_toTopOf="@+id/etNombre"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvId" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/etNombre"
+                app:layout_constraintTop_toBottomOf="@+id/tvId"
+                android:textSize="18sp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,18 +50,34 @@ public class PerfilFragment extends Fragment {
         tvId = view.findViewById(R.id.tvId);
         tvRol = view.findViewById(R.id.tvRol);
         perfilViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()).create(PerfilViewModel.class);
-        perfilViewModel.getInquilino().observe(getViewLifecycleOwner(), new Observer<Inquilino>() {
-            @Override
-            public void onChanged(Inquilino inquilino) {
-                tvId.setText(inquilino.getId() + "");
-                etNombre.setText(inquilino.getNombre());
-                etApellido.setText(inquilino.getApellido());
-                etEmail.setText(inquilino.getEmail());
-                etTelefono.setText(inquilino.getTelefono());
-                etDni.setText(inquilino.getDni());
-                tvRol.setText(tvRol.getText().toString() + sharedPreferences.getString("rol", "-"));
-            }
-        });
+        String rol = sharedPreferences.getString("rol", "");
+        if (rol.equals("inquilino")) {
+            perfilViewModel.getInquilino().observe(getViewLifecycleOwner(), new Observer<Inquilino>() {
+                @Override
+                public void onChanged(Inquilino inquilino) {
+                    tvId.setText(inquilino.getId() + "");
+                    etNombre.setText(inquilino.getNombre());
+                    etApellido.setText(inquilino.getApellido());
+                    etEmail.setText(inquilino.getEmail());
+                    etTelefono.setText(inquilino.getTelefono());
+                    etDni.setText(inquilino.getDni());
+                    tvRol.setText(tvRol.getText().toString() + sharedPreferences.getString("rol", "-"));
+                }
+            });
+        } else {
+            perfilViewModel.getUsuario().observe(getViewLifecycleOwner(), new Observer<Usuario>() {
+                @Override
+                public void onChanged(Usuario usuario) {
+                    tvId.setText(usuario.getId() + "");
+                    etNombre.setText(usuario.getNombre());
+                    etApellido.setText(usuario.getApellido());
+                    etEmail.setText(usuario.getEmail());
+                    etTelefono.setText(usuario.getTelefono());
+                    etDni.setText(usuario.getDni());
+                    tvRol.setText(tvRol.getText().toString() + sharedPreferences.getString("rol", "-"));
+                }
+            });
+        }
         perfilViewModel.cargarUsuario(getActivity().getIntent().getBooleanExtra("login", false));
         getActivity().getIntent().removeExtra("login");
         btEditar.setOnClickListener(new View.OnClickListener() {
@@ -81,8 +97,9 @@ public class PerfilFragment extends Fragment {
                         Integer.valueOf(tvId.getText().toString()),
                         etNombre.getText().toString(),
                         etApellido.getText().toString(),
+                        etDni.getText().toString(),
+                        etTelefono.getText().toString(),
                         etEmail.getText().toString(),
-                        "contraseña no cambia",
                         -1
                 );
                 perfilViewModel.editarUsuario(usuario);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import com.example.terrasolecabaas.modelo.Pedido;
 import com.example.terrasolecabaas.modelo.PedidoLinea;
 import com.example.terrasolecabaas.modelo.Producto_Servicio;
 import com.example.terrasolecabaas.request.ApiClient;
@@ -131,7 +132,15 @@ public class ProductosYServiciosViewModel extends AndroidViewModel {
         if(esItemNuevo) pedidoLineas.add(pedidoLinea);
         jsonPedidoLineas = gson.toJson(pedidoLineas);
         editor.putString("pedidolineas", jsonPedidoLineas);
-        Toast.makeText(context, pedidoLineas.size() + "", Toast.LENGTH_LONG).show();
+        // Iniciar un pedido si no existe
+        String jsonPedido = sharedPreferences.getString("pedido", null);
+        Type tipoPedido = new TypeToken<Pedido>() {}.getType();
+        Pedido pedido = gson.fromJson(jsonPedido, tipoPedido);
+        if (pedido == null) {
+            pedido = new Pedido();
+        }
+        jsonPedido = gson.toJson(pedido);
+        editor.putString("pedido", jsonPedido);
         editor.apply();
     }
 }

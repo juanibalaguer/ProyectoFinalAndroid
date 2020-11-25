@@ -7,18 +7,21 @@ public class Usuario implements Serializable {
     private int id;
     private String nombre;
     private String apellido;
+    private String dni;
+    private String telefono;
     private String email;
     private String contraseña;
     private int rol;
 
     public Usuario() {}
 
-    public Usuario(int id, String nombre, String apellido, String email, String contraseña, int rol) {
+    public Usuario(int id, String nombre, String apellido, String dni, String telefono, String email, int rol) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.dni = dni;
+        this.telefono = telefono;
         this.email = email;
-        this.contraseña = contraseña;
         this.rol = rol;
     }
 
@@ -44,6 +47,21 @@ public class Usuario implements Serializable {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getEmail() {

@@ -39,7 +39,7 @@ public class PedidoFragment extends Fragment {
     private ListView lvPedidoLineas;
     private TextView tvMonto;
     private EditText etTitulo;
-    private Button btSeleccionarFecha, btSeleccionarHora, btConfirmarPedido, btAgregarItems;
+    private Button btSeleccionarFecha, btConfirmarPedido, btAgregarItems;
     private PedidoViewModel pedidoViewModel;
     private PedidoLineaAdapter pedidoLineaAdapter;
 
@@ -55,7 +55,6 @@ public class PedidoFragment extends Fragment {
         lvPedidoLineas = view.findViewById(R.id.lvPedidoLineas);
         tvMonto = view.findViewById(R.id.tvMonto);
         etTitulo = view.findViewById(R.id.etTitulo);
-        btSeleccionarHora = view.findViewById(R.id.btSeleccionarHora);
         btSeleccionarFecha = view.findViewById(R.id.btSeleccionarFecha);
         btConfirmarPedido = view.findViewById(R.id.btConfirmarPedido);
         btAgregarItems = view.findViewById(R.id.btAgregarItems);
@@ -66,15 +65,14 @@ public class PedidoFragment extends Fragment {
                 seleccionarFecha();
             }
         });
-        btSeleccionarHora.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                seleccionarHora();
-            }
-        });
         btAgregarItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    pedidoViewModel.guardarDatos(etTitulo.getText().toString(), btSeleccionarFecha.getText().toString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.fragment_productosyservicios);
             }
         });
@@ -82,7 +80,7 @@ public class PedidoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    pedidoViewModel.confirmarPedido(btSeleccionarFecha.getText().toString(), btSeleccionarHora.getText().toString(), etTitulo.getText().toString());
+                    pedidoViewModel.confirmarPedido(btSeleccionarFecha.getText().toString(), etTitulo.getText().toString());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -94,7 +92,7 @@ public class PedidoFragment extends Fragment {
                 if(pedido != null){
                     PedidoLineaAdapter adapter = new PedidoLineaAdapter(getContext(), R.layout.frament_item_linea, pedido.getPedidoLineas(), getLayoutInflater(), pedidoViewModel);
                     lvPedidoLineas.setAdapter(adapter);
-                    tvMonto.setText(pedido.getMontoPedido() + "");
+                    tvMonto.setText("$" + String.format("%.2f",pedido.getMontoPedido()));
                     etTitulo.setText(pedido.getTitulo());
 
                 } else {
@@ -108,12 +106,6 @@ public class PedidoFragment extends Fragment {
                 btSeleccionarFecha.setText(fecha);
             }
         });
-        pedidoViewModel.getHora().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String hora) {
-                btSeleccionarHora.setText(hora);
-            }
-        });
 
         pedidoViewModel.pedidoEsExitoso().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -123,46 +115,27 @@ public class PedidoFragment extends Fragment {
                 }
             }
         });
-        pedidoViewModel.cargarPedido(getArguments(), etTitulo.getText().toString());
+        pedidoViewModel.cargarPedido(getArguments());
     }
+
+
     public void seleccionarFecha() {
-        Calendar calendar = Calendar.getInstance();
-        int año = calendar.get(Calendar.YEAR);
-        int mes = calendar.get(Calendar.MONTH);
-        int dia = calendar.get(Calendar.DATE);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+        final Calendar currentDate = Calendar.getInstance();
+        Calendar fecha = Calendar.getInstance();
+        new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-
-                Calendar calendarPick = Calendar.getInstance();
-                calendarPick.set(Calendar.YEAR, year);
-                calendarPick.set(Calendar.MONTH, month);
-                calendarPick.set(Calendar.DATE, date);
-                String stringFecha = DateFormat.format("dd/MM/yyyy", calendarPick).toString();
-                btSeleccionarFecha.setText(stringFecha);
+            public void onDateSet(DatePicker view, int año, int mes, int dia) {
+                fecha.set(año, mes, dia);
+                new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int horas, int minutos) {
+                        fecha.set(Calendar.HOUR_OF_DAY, horas);
+                        fecha.set(Calendar.MINUTE, minutos);
+                        String stringFecha = DateFormat.format("dd/MM/yyyy HH:mm", fecha).toString();
+                        btSeleccionarFecha.setText(stringFecha);
+                    }
+                }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false).show();
             }
-        }, año, mes, dia);
-
-        datePickerDialog.show();
-    }
-    public void seleccionarHora() {
-        Calendar calendar = Calendar.getInstance();
-        int hora = calendar.get(Calendar.HOUR);
-        int minuto = calendar.get(Calendar.MINUTE);
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                Calendar calendarPick = Calendar.getInstance();
-                calendarPick.set(Calendar.HOUR, hour);
-                calendarPick.set(Calendar.MINUTE, minute);
-                String stringHora = DateFormat.format("HH:mm", calendarPick).toString();
-                btSeleccionarHora.setText(stringHora);
-            }
-        }, hora, minuto, true);
-
-
-        timePickerDialog.show();
+        }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
     }
 }

@@ -42,7 +42,7 @@ public class PedidoLineaAdapter extends ArrayAdapter<PedidoLinea> {
         ImageButton btEliminarLinea = viewPedidoLinea.findViewById(R.id.btEliminarLinea);
         tvCantidadLinea.setText(pedidoLineas.get(position).getCantidad() + "");
         tvNombreProductoLinea.setText(pedidoLineas.get(position).getProducto_Servicio().getNombre());
-        tvPrecioLinea.setText(pedidoLineas.get(position).getPrecioPorUnidad() * pedidoLineas.get(position).getCantidad() + "");
+        tvPrecioLinea.setText("$" + String.format("%.2f",pedidoLineas.get(position).getPrecioPorUnidad() * pedidoLineas.get(position).getCantidad()));
         btEliminarLinea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
