@@ -50,51 +50,39 @@ public class ApiClient {
         @FormUrlEncoded
         @POST("Usuarios/login")
         Call<String> Login(@Field("email") String email, @Field("contraseña") String contraseña);
+
         @GET("Usuarios/")
         Call<Usuario> getUsuario(@Header("Authorization") String token);
+
         @PUT("Usuarios/")
         Call<Usuario> putUsuario(@Header("Authorization") String token, @Body Usuario usuario);
+
+        @PUT("Inquilinos/")
+        Call<Inquilino> putInquilino(@Header("Authorization") String token, @Body Inquilino inquilino);
+
         @GET("Estadias/")
         Call<Estadia> getEstadia(@Header("Authorization") String token);
+
         @GET("Productos_Servicios/Productos")
         Call<ArrayList<Producto_Servicio>> getProductos(@Header("Authorization") String token);
+
         @GET("Productos_Servicios/Servicios")
         Call<ArrayList<Producto_Servicio>> getServicios(@Header("Authorization") String token);
+
         @POST("Pedidos/")
         Call<Pedido> postPedido(@Header("Authorization") String token, @Body Pedido pedido);
+
         @PUT("Pedidos/")
         Call<Pedido> putPedido(@Header("Authorization") String token, @Body Pedido pedido);
+
         @GET("Pedidos/Inquilino/")
         Call<ArrayList<Pedido>> getPedidosPorInquilino(@Header("Authorization") String token);
+
         @DELETE("Pedidos/{id}")
         Call<ResponseBody> deletePedido(@Header("Authorization") String token, @Path("id") int id);
+
         @GET("Pedidos/PedidosPendientes/")
         Call<ArrayList<Pedido>> getPedidosPendientes(@Header("Authorization") String token);
-        /*
-        @GET("Inmuebles/Vigentes")
-        Call<ArrayList<Inmueble>> getInmueblesVigentes(@Header("Authorization") String token);
-        @GET("Inquilinos/{id}") // Id del inmueble
-        Call<Inquilino> getInquilino(@Header("Authorization") String token, @Path("id") int id);
-        @GET("Contratos/{id}") // Id del inmueble
-        Call<Contrato> getContrato(@Header("Authorization") String token, @Path("id") int id);
-        @GET("Pagos/{id}") //Id del inmueble
-        Call<ArrayList<Pago>> getPagos(@Header("Authorization") String token, @Path("id") int id);
-        @PUT("Inmuebles")
-        Call<Inmueble> putInmueble(@Header("Authorization") String token, @Body Inmueble inmueble);
-        @Multipart
-        @POST("Inmuebles")
-        Call<ResponseBody> postInmueble(
-                @Header("Authorization") String token,
-                @Part MultipartBody.Part imagen,
-                @Part RequestBody direccion,
-                @Part RequestBody uso,
-                @Part RequestBody tipo,
-                @Part RequestBody ambientes,
-                @Part RequestBody precio,
-                @Part RequestBody idPropietario,
-                @Part RequestBody estado,
-                @Part RequestBody foto);
-*/
     }
 
 

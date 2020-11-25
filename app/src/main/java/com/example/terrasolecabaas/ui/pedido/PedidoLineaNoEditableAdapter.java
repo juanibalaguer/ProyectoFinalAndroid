@@ -40,6 +40,7 @@ public class PedidoLineaNoEditableAdapter extends ArrayAdapter<PedidoLinea> {
         TextView tvNombreProductoLinea = viewPedidoLinea.findViewById(R.id.tvNombreProducto);
         TextView tvPrecioLinea = viewPedidoLinea.findViewById(R.id.tvPrecioLinea);
         ImageButton btEliminarLinea = viewPedidoLinea.findViewById(R.id.btEliminarLinea);
+        btEliminarLinea.setVisibility(View.GONE);
         tvCantidadLinea.setText(pedidoLineas.get(position).getCantidad() + "");
         tvNombreProductoLinea.setText(pedidoLineas.get(position).getProducto_Servicio().getNombre());
         tvPrecioLinea.setText(pedidoLineas.get(position).getPrecioPorUnidad() * pedidoLineas.get(position).getCantidad() + "");

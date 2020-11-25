@@ -1,7 +1,9 @@
 package com.example.terrasolecabaas.ui.pedidos;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -80,7 +82,7 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
                 break;
             case 1:
                 tvEstado.setText("Confirmado");
-                tvEstado.setTextColor(Color.GREEN);
+                tvEstado.setTextColor(Color.YELLOW);
                 break;
             case 2:
                 tvEstado.setText("En preparación");
@@ -88,8 +90,9 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
                 break;
             default :
                 tvEstado.setText("Entregado");
+                tvEstado.setTextColor(Color.GREEN);
         }
-        TextView tvCabaña = viewPedido.findViewById(R.id.tvCabaña);
+        TextView tvEstadia = viewPedido.findViewById(R.id.tvEstadia);
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm");
         String fechaParseada = formato.format(pedidos.get(position).getFechaPedido());
         tvFechaPedido.setText(fechaParseada);
@@ -101,7 +104,20 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
             btCancelarPedido.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    pedidosViewModel.cancelarPedido(pedidos.get(position).getId());
+                    new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme)
+                            .setTitle("Cancelar pedido")
+                            .setMessage("Está seguro/a de que desea cancelar el pedido?")
+                            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    pedidosViewModel.cancelarPedido(pedidos.get(position).getId());
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            }).show();
                 }
             });
             btEdit.setOnClickListener(new View.OnClickListener() {
@@ -114,18 +130,45 @@ public class PedidoAdapter extends ArrayAdapter<Pedido> {
                 }
             });
         } else {
-            tvCabaña.setVisibility(View.VISIBLE);
-            tvCabaña.setText(pedidos.get(position).getEstadiaId() + "");
+            tvEstadia.setVisibility(View.VISIBLE);
+            tvEstadia.setText("Estadia: " + pedidos.get(position).getEstadiaId());
             btCancelarPedido.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    pedidosViewModel.entregarPedido(pedidos.get(position));
+                    new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme)
+                            .setTitle("Entregar pedido")
+                            .setMessage("Está seguro/a de que desea marcar el pedido como entregado?")
+                            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    pedidosViewModel.entregarPedido(pedidos.get(position));
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            }).show();
+
                 }
             });
             btEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    pedidosViewModel.cambiarEstadoPedido(pedidos.get(position));
+                    new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme)
+                            .setTitle("Cambiar estado")
+                            .setMessage("Está seguro/a de que desea cambiar el estado del pedido?")
+                            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    pedidosViewModel.cambiarEstadoPedido(pedidos.get(position));
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            }).show();
                 }
             });
         }

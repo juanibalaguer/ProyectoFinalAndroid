@@ -16,6 +16,20 @@ public class LogoutViewModel extends AndroidViewModel {
     }
 
     public void cerrarSesion() {
-        context.getSharedPreferences("cabaña", Context.MODE_PRIVATE).edit().clear().commit();
+        SharedPreferences.Editor editor = context.getSharedPreferences("cabaña", 0).edit();
+        editor.putInt("idCabaña", -1);
+        editor.putInt("idUsuario", -1);
+        editor.remove("pedido");
+        editor.remove("pedidolineas");
+        editor.putString("token", "");
+        editor.putInt("idEstadia", -1);
+        editor.putInt("idInquilino", -1);
+        editor.putString("nombre", "-");
+        editor.putString("apellido", "-");
+        editor.putString("email", "-");
+        editor.putString("rol", "-");
+        editor.putString("dni", "-");
+        editor.putString("telefono", "-");
+        editor.commit();
     }
 }

@@ -50,9 +50,7 @@ public class PerfilFragment extends Fragment {
         tvId = view.findViewById(R.id.tvId);
         tvRol = view.findViewById(R.id.tvRol);
         perfilViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()).create(PerfilViewModel.class);
-        String rol = sharedPreferences.getString("rol", "");
-        if (rol.equals("inquilino")) {
-            perfilViewModel.getInquilino().observe(getViewLifecycleOwner(), new Observer<Inquilino>() {
+        perfilViewModel.getInquilino().observe(getViewLifecycleOwner(), new Observer<Inquilino>() {
                 @Override
                 public void onChanged(Inquilino inquilino) {
                     tvId.setText(inquilino.getId() + "");
@@ -64,7 +62,6 @@ public class PerfilFragment extends Fragment {
                     tvRol.setText(tvRol.getText().toString() + sharedPreferences.getString("rol", "-"));
                 }
             });
-        } else {
             perfilViewModel.getUsuario().observe(getViewLifecycleOwner(), new Observer<Usuario>() {
                 @Override
                 public void onChanged(Usuario usuario) {
@@ -77,9 +74,6 @@ public class PerfilFragment extends Fragment {
                     tvRol.setText(tvRol.getText().toString() + sharedPreferences.getString("rol", "-"));
                 }
             });
-        }
-        perfilViewModel.cargarUsuario(getActivity().getIntent().getBooleanExtra("login", false));
-        getActivity().getIntent().removeExtra("login");
         btEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +96,7 @@ public class PerfilFragment extends Fragment {
                         etEmail.getText().toString(),
                         -1
                 );
+                usuario.setContraseña("no cambia");
                 perfilViewModel.editarUsuario(usuario);
                 etNombre.setEnabled(false);
                 etApellido.setEnabled(false);
@@ -109,7 +104,8 @@ public class PerfilFragment extends Fragment {
                 btEditar.setVisibility(View.VISIBLE);
             }
         });
-
+        perfilViewModel.cargarUsuario(getActivity().getIntent().getBooleanExtra("login", false));
+        getActivity().getIntent().removeExtra("login");
     }
 
 

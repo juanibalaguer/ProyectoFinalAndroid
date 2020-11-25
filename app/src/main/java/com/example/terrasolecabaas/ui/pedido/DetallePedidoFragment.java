@@ -18,7 +18,9 @@ import android.widget.TextView;
 import com.example.terrasolecabaas.R;
 import com.example.terrasolecabaas.modelo.Pedido;
 
-public class DetallePedido extends Fragment {
+import java.text.SimpleDateFormat;
+
+public class DetallePedidoFragment extends Fragment {
 
     TextView tvTitulo, tvMonto, tvFecha, tvEstado;
     ListView lvItems;
@@ -43,9 +45,12 @@ public class DetallePedido extends Fragment {
             public void onChanged(Pedido pedido) {
                 PedidoLineaNoEditableAdapter adapter = new PedidoLineaNoEditableAdapter(getContext(), R.layout.frament_item_linea, pedido.getPedidoLineas(), getLayoutInflater());
                 lvItems.setAdapter(adapter);
-                tvMonto.setText(pedido.getMontoPedido() + "");
+                tvMonto.setText("$" + String.format("%.2f",pedido.getMontoPedido()));
                 tvTitulo.setText(pedido.getTitulo());
                 tvEstado.setText(pedido.getEstado() == 2 ? "Confirmado" : "En preparación");
+                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy' 'HH:mm");
+                String fechaParseada = formato.format(pedido.getFechaPedido());
+                tvFecha.setText(fechaParseada);
 
             }
         });

@@ -42,7 +42,7 @@
             android:id="@+id/tvRol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="32sp"
             android:text="Perfil de "
             android:textColor="@color/golden"
             app:layout_constraintBottom_toTopOf="@+id/layoutPerfil"

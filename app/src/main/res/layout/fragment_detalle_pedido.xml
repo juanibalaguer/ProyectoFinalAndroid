@@ -9,75 +9,134 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.pedido.DetallePedido">
+        tools:context=".ui.pedido.DetallePedidoFragment"
+        android:background="@color/oscuro">
 
-        <ListView
-            android:id="@+id/lvItemsPedidoDetalle"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/tvMontoTotalDetalle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/tvTituloDetalle"
-            app:layout_constraintTop_toBottomOf="@+id/tvTituloDetalle" />
-
-        <TextView
-            android:id="@+id/tvTituloDetalle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/lvItemsPedidoDetalle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Detalles del pedido"
-            android:textSize="32sp"
-            app:layout_constraintBottom_toTopOf="@+id/tvTituloDetalle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.100000024"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
-            android:id="@+id/tvMontoTotalDetalle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/tvFechaEntregaDetalle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lvItemsPedidoDetalle" />
-
-        <TextView
-            android:id="@+id/tvFechaEntregaDetalle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/tvEstadoDetalle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvMontoTotalDetalle" />
-
-        <TextView
-            android:id="@+id/tvEstadoDetalle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/fondo_item_pedido"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvFechaEntregaDetalle" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ListView
+                android:id="@+id/lvItemsPedidoDetalle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/tvMontoTotalDetalle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/tvTituloDetalle"
+                app:layout_constraintTop_toBottomOf="@+id/tvTituloDetalle" />
+
+            <TextView
+                android:id="@+id/tvTituloDetalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/golden"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/lvItemsPedidoDetalle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalles del pedido"
+                android:textColor="@color/oscuro"
+                android:textSize="32sp"
+                app:layout_constraintBottom_toTopOf="@+id/tvTituloDetalle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.100000024"
+                app:layout_constraintVertical_chainStyle="spread"
+                tools:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvMontoTotalDetalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/golden"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/tvFechaEntregaDetalle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintStart_toEndOf="@+id/tv1"
+                app:layout_constraintTop_toBottomOf="@+id/lvItemsPedidoDetalle"
+                tools:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monto total:"
+                android:textColor="@color/golden"
+                android:textSize="20sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvMontoTotalDetalle"
+                app:layout_constraintStart_toStartOf="@+id/tvTituloDetalle" />
+
+            <TextView
+                android:id="@+id/tvFechaEntregaDetalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/golden"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tvEstadoDetalle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintStart_toEndOf="@+id/tv3"
+                app:layout_constraintTop_toBottomOf="@+id/tvMontoTotalDetalle" />
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha entrega: "
+                android:textColor="@color/golden"
+                android:textSize="20sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvFechaEntregaDetalle"
+                app:layout_constraintStart_toStartOf="@+id/tv1" />
+
+            <TextView
+                android:id="@+id/tvEstadoDetalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/golden"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintStart_toEndOf="@+id/tv4"
+                app:layout_constraintTop_toBottomOf="@+id/tvFechaEntregaDetalle" />
+
+            <TextView
+                android:id="@+id/tv4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estado: "
+                android:textColor="@color/golden"
+                android:textSize="20sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvEstadoDetalle"
+                app:layout_constraintStart_toStartOf="@+id/tv3" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

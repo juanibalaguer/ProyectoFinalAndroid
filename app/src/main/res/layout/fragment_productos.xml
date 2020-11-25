@@ -12,8 +12,6 @@
     android:background="@color/oscuro"
     tools:context=".ui.productosyservicios.ProductosFragment"
     >
-
-
     <Button
         android:id="@+id/btComenzarPedido"
         android:layout_width="wrap_content"

@@ -40,7 +40,7 @@
         tools:layout="@layout/fragment_pedido" />
     <fragment
         android:id="@+id/fragment_detalle_pedido"
-        android:name="com.example.terrasolecabaas.ui.pedido.DetallePedido"
+        android:name="com.example.terrasolecabaas.ui.pedido.DetallePedidoFragment"
         android:label="@string/DetallePedido"
         tools:layout="@layout/fragment_detalle_pedido" >
         <action

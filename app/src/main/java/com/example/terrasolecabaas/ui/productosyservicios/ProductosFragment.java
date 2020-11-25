@@ -45,7 +45,7 @@ public class ProductosFragment extends Fragment {
                     Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.fragment_pedido);
                 }
             });
-        } else {
+        } else if(rol.equals("empleado")){
             btComenzarPedido.setVisibility(View.GONE);
         }
         productosYServiciosViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()).create(ProductosYServiciosViewModel.class);

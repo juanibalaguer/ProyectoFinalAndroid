@@ -27,6 +27,7 @@ public class PedidosViewModel extends AndroidViewModel {
 
     private  MutableLiveData<ArrayList<Pedido>> mutablePedidos;
     private  MutableLiveData<Boolean> mutableHayPedidos;
+    private  MutableLiveData<String> mutableTitulo;
     private Context context;
     SharedPreferences sharedPreferences;
     public PedidosViewModel(@NonNull Application application) {
@@ -47,6 +48,20 @@ public class PedidosViewModel extends AndroidViewModel {
             mutableHayPedidos = new MutableLiveData<>();
         }
         return mutableHayPedidos;
+    }
+    public LiveData<String> getTitulo() {
+        if (mutableTitulo == null) {
+            mutableTitulo = new MutableLiveData<>();
+        }
+        return mutableTitulo;
+    }
+    public void cargarTitulo() {
+        String rol = sharedPreferences.getString("rol", "");
+        if(rol.equals("inquilino")) {
+            mutableTitulo.setValue("Tus pedidos");
+        } else if(rol.equals("empleado")) {
+            mutableTitulo.setValue("Pedidos pendientes");
+        }
     }
     public void cargarPedidos() {
         String token = sharedPreferences.getString("token", "");
@@ -104,7 +119,7 @@ public class PedidosViewModel extends AndroidViewModel {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()) {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Pedido cancelado", Toast.LENGTH_LONG).show();
                     cargarPedidos();
                 } else {
 
@@ -130,7 +145,7 @@ public class PedidosViewModel extends AndroidViewModel {
             @Override
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
                 if(response.isSuccessful()) {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Estado modificado", Toast.LENGTH_LONG).show();
                     cargarPedidos();
                 } else {
 
@@ -152,7 +167,7 @@ public class PedidosViewModel extends AndroidViewModel {
             @Override
             public void onResponse(Call<Pedido> call, Response<Pedido> response) {
                 if(response.isSuccessful()) {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Pedido entregado", Toast.LENGTH_LONG).show();
                     cargarPedidos();
                 } else {
 

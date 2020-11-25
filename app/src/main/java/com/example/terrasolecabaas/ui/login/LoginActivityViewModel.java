@@ -37,8 +37,7 @@ public class LoginActivityViewModel extends AndroidViewModel {
     }
 
     public void autenticar(final String usuario, String contraseña) {
-        final ApiClient.MyApiInterface myApiInterface = apiClient.getMyApiClient();
-        Call<String> token = myApiInterface.Login(usuario, contraseña);
+        Call<String> token = ApiClient.getMyApiClient().Login(usuario, contraseña);
         token.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

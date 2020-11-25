@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -121,9 +122,10 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ViewHo
                     public void onClick(View view) {
                         productosYServiciosViewModel.agregarProducto(productos.get(getAdapterPosition()),
                                 Integer.valueOf(tvCantidad.getText().toString()));
+                        Toast.makeText(context, "Agregado/s", Toast.LENGTH_LONG).show();
                     }
                 });
-            } else {
+            } else if(rol.equals("empleado")){
                 btAgregar.setVisibility(View.GONE);
                 btSumar.setVisibility(View.GONE);
                 btRestar.setVisibility(View.GONE);

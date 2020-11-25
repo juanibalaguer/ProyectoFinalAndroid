@@ -92,6 +92,7 @@ public class PerfilViewModel extends AndroidViewModel {
                     editor.putInt("idUsuario", usuario.getId());
                     editor.putString("email", usuario.getEmail());
                     editor.putString("rol", usuario.getRol() == 2 ? "empleado" : "inquilino");
+                    editor.commit();
                     if(usuario.getRol() == 3) {
                         Call<Estadia> callEstadia = ApiClient.getMyApiClient().getEstadia(token);
                         callEstadia.enqueue(new Callback<Estadia>() {
@@ -99,7 +100,9 @@ public class PerfilViewModel extends AndroidViewModel {
                             public void onResponse(Call<Estadia> call, Response<Estadia> response) {
                                 if (response.isSuccessful()) {
                                     Estadia estadia = response.body();
-                                    mutableInquilino.postValue(estadia.getInquilino());
+                                    if(mutableInquilino != null) {
+                                        mutableInquilino.postValue(estadia.getInquilino());
+                                    }
                                     editor.putInt("idCabaña", estadia.getCabañaId());
                                     editor.putInt("idEstadia", estadia.getId());
                                     editor.putInt("idInquilino", estadia.getInquilinoId());
@@ -145,38 +148,82 @@ public class PerfilViewModel extends AndroidViewModel {
             }
         });
     }
-    public void editarUsuario(Usuario usuario) {/*
+    public void editarUsuario(Usuario usuario) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("cabaña", context.MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "");
-        Call<Usuario> callUsuario = ApiClient.getMyApiClient().putUsuario(token, usuario);
-        callUsuario.enqueue(new Callback<Usuario>() {
-            @Override
-            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
-                if(response.isSuccessful()) {
-                    SharedPreferences sharedPreferences = context.getSharedPreferences("cabaña", context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    Usuario usuario = response.body();
-                    editor.putInt("id", usuario.getId());
-                    editor.putString("nombre", usuario.getNombre());
-                    editor.putString("apellido", usuario.getApellido());
-                    editor.putString("email", usuario.getEmail());
-                    editor.commit();
-                    mutableUsuario.postValue(usuario);
-                    Toast.makeText(context, "Perfil actualizado", Toast.LENGTH_LONG).show();
-                } else {
-                    try {
-                        Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        String rol = sharedPreferences.getString("rol", "");
+        if(rol.equals("empleado")) {
+            Call<Usuario> callUsuario = ApiClient.getMyApiClient().putUsuario(token, usuario);
+            callUsuario.enqueue(new Callback<Usuario>() {
+                @Override
+                public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+                    if(response.isSuccessful()) {
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("cabaña", context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        Usuario usuario = response.body();
+                        editor.putInt("idUsuario", usuario.getId());
+                        editor.putString("nombre", usuario.getNombre());
+                        editor.putString("apellido", usuario.getApellido());
+                        editor.putString("email", usuario.getEmail());
+                        editor.putString("dni", usuario.getDni());
+                        editor.putString("telefono", usuario.getTelefono());
+                        editor.commit();
+                        mutableUsuario.postValue(usuario);
+                        Toast.makeText(context, "Perfil actualizado", Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-            @Override
-            public void onFailure(Call<Usuario> call, Throwable t) {
-                Toast.makeText(context, "Error al editar perfil", Toast.LENGTH_LONG).show();
-            }
-        });
-*/
+                @Override
+                public void onFailure(Call<Usuario> call, Throwable t) {
+                    Toast.makeText(context, "Error al editar perfil", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else if(rol.equals("inquilino")) {
+            Inquilino inquilino = new Inquilino(
+                    sharedPreferences.getInt("idInquilino", -1),
+                    usuario.getNombre(),
+                    usuario.getApellido(),
+                    usuario.getDni(),
+                    usuario.getEmail(),
+                    usuario.getTelefono());
+
+            Call<Inquilino> callInquilino = ApiClient.getMyApiClient().putInquilino(token, inquilino);
+            callInquilino.enqueue(new Callback<Inquilino>() {
+                @Override
+                public void onResponse(Call<Inquilino> call, Response<Inquilino> response) {
+                    if(response.isSuccessful()) {
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("cabaña", context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        Inquilino inquilino = response.body();
+                        editor.putInt("id", usuario.getId());
+                        editor.putString("nombre", usuario.getNombre());
+                        editor.putString("apellido", usuario.getApellido());
+                        editor.putString("email", usuario.getEmail());
+                        editor.putString("dni", usuario.getDni());
+                        editor.putString("telefono", usuario.getTelefono());
+                        editor.commit();
+                        mutableInquilino.postValue(inquilino);
+                        Toast.makeText(context, "Perfil actualizado", Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            Toast.makeText(context, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call<Inquilino> call, Throwable t) {
+                    Toast.makeText(context, "Error al editar perfil", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
     }
 
 }
